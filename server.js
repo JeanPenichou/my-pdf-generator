@@ -14,7 +14,30 @@ app.post("/generate-pdf", async (req, res) => {
         if (!url) return res.status(400).json({ error: "URL is required" });
 
         const browser = await puppeteer.launch({
-            args: ["--no-sandbox", "--disable-setuid-sandbox"]
+    headless: true,
+    args: [
+        "--no-sandbox",
+        "--disable-setuid-sandbox",
+        "--disable-dev-shm-usage",
+        "--disable-accelerated-2d-canvas",
+        "--no-first-run",
+        "--disable-gpu",
+        "--disable-software-rasterizer"
+    ]
+});
+
+
+        const page = await browser.newPage();
+        await page.goto(url, { waitUntil: "networkidle2" });
+
+        await page.evaluate(() => {
+            return new Promise((resolve) => {
+                if (window.MathJax) {
+                    MathJax.typesetPromise().then(resolve);
+                } else {
+                    resolve();
+                }
+            });
         });
 
         const page = await browser.newPage();
