@@ -9,6 +9,7 @@ app.use(express.json());
 
 app.post("/generate-pdf", async (req, res) => {
     try {
+        console.log("Received request to generate PDF...");
         const { url } = req.body;
         if (!url) return res.status(400).json({ error: "URL is required" });
 
@@ -37,18 +38,20 @@ app.post("/generate-pdf", async (req, res) => {
         res.setHeader("Content-Disposition", "attachment; filename=exercise.pdf");
         res.send(pdfBuffer);
     } catch (error) {
-        console.error(error);
+        console.error("PDF generation error:", error);
         res.status(500).json({ error: "PDF generation failed" });
     }
 });
 
-const express = require("express");
-const app = express();
+// ✅ Define PORT properly
+const PORT = process.env.PORT || 3000;
 
-const server = app.listen(process.env.PORT || 3000, () => {
-    console.log(`Server running on port ${server.address().port}`);
+// ✅ Start the server correctly
+const server = app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
 });
 
+// ✅ Handle errors properly
 server.on("error", (err) => {
     if (err.code === "EADDRINUSE") {
         console.error("Port already in use. Trying another port...");
@@ -57,7 +60,4 @@ server.on("error", (err) => {
         console.error("Server error:", err);
     }
 });
-
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-console.log(`Server should now be running on port ${PORT}`);
 
