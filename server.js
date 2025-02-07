@@ -42,7 +42,22 @@ app.post("/generate-pdf", async (req, res) => {
     }
 });
 
-const PORT = process.env.PORT || 3000;
+const express = require("express");
+const app = express();
+
+const server = app.listen(process.env.PORT || 3000, () => {
+    console.log(`Server running on port ${server.address().port}`);
+});
+
+server.on("error", (err) => {
+    if (err.code === "EADDRINUSE") {
+        console.error("Port already in use. Trying another port...");
+        server.listen(0); // Automatically picks an available port
+    } else {
+        console.error("Server error:", err);
+    }
+});
+
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 console.log(`Server should now be running on port ${PORT}`);
 
