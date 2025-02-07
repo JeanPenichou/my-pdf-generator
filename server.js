@@ -20,12 +20,15 @@ app.post("/generate-pdf", async (req, res) => {
             executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || "/usr/bin/google-chrome-stable", 
             args: [
                 "--no-sandbox",
-                "--disable-setuid-sandbox",
-                "--disable-dev-shm-usage",
-                "--disable-accelerated-2d-canvas",
-                "--no-first-run",
-                "--disable-gpu",
-                "--disable-software-rasterizer"
+        	"--disable-setuid-sandbox",
+        	"--disable-dev-shm-usage",
+        	"--disable-accelerated-2d-canvas",
+        	"--disable-gpu",
+        	"--no-zygote",
+        	"--single-process",
+        	"--disable-background-networking",
+        	"--disable-software-rasterizer",
+        	"--mute-audio"
             ]
         });
 
