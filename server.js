@@ -1,3 +1,13 @@
+const { execSync } = require("child_process");
+
+// ✅ Ensure Google Chrome is installed on Railway
+console.log("🔄 Installing Google Chrome...");
+execSync(
+    "apt update && apt install -y wget curl unzip fontconfig locales gconf-service libasound2 libatk1.0-0 libcups2 libdbus-1-3 libgtk-3-0 libnspr4 libxcomposite1 libxrender1 libxss1 libxtst6 libnss3 google-chrome-stable",
+    { stdio: "inherit" }
+);
+console.log("✅ Google Chrome installed successfully!");
+
 console.log("Starting server...");
 const express = require("express");
 const puppeteer = require("puppeteer-core");
@@ -17,7 +27,7 @@ app.post("/generate-pdf", async (req, res) => {
 
         const browser = await puppeteer.launch({
             headless: true,
-            executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || "/usr/bin/google-chrome-stable", 
+            executablePath: "/usr/bin/google-chrome", 
             args: [
                 "--no-sandbox",
         	"--disable-setuid-sandbox",
