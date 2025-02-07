@@ -60,15 +60,19 @@ app.post("/generate-pdf", async (req, res) => {
 	}
 
         console.log("Processing MathJax...");
-        await page.evaluate(() => {
-            return new Promise((resolve) => {
-                if (window.MathJax) {
-                    MathJax.typesetPromise().then(resolve);
-                } else {
-                    resolve();
-                }
-            });
-        });
+	    await page.evaluate(async () => {
+    		if (window.MathJax) {
+        	    console.log("🔄 MathJax detected. Processing equations...");
+        	    await MathJax.typesetPromise();
+        	    console.log("✅ MathJax processing complete!");
+    	        } else {
+                    console.log("⚠️ MathJax not found on page.");
+    		}
+	    }); 
+
+	    // Ensure Puppeteer waits long enough for MathJax to render
+	    await page.waitForTimeout(2000); // ✅ Wait 2 seconds for MathJax to finalize
+
 
         console.log("Generating PDF...");
         const pdfBuffer = await page.pdf({ format: "A4", printBackground: true });
