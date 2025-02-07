@@ -76,7 +76,7 @@ app.post("/generate-pdf", async (req, res) => {
 
         console.log("Generating PDF...");
         console.log("📄 Generating PDF with top margin...");
-	const pdfBuffer = await page.pdf({ format: "A4", printBackground: true, margin : top : 50px });
+	const pdfBuffer = await page.pdf({ format: "A4", printBackground: true});
 
 	console.log("🔒 Closing browser...");
         await browser.close();
