@@ -28,8 +28,8 @@ app.use(express.json());
 app.post("/generate-pdf", async (req, res) => {
     try {
         console.log("Received request to generate PDF...");
-        const { url } = req.body;
-        if (!url) return res.status(400).json({ error: "URL is required" });
+        const { url, html } = req.body;
+        if (!url && !html) return res.status(400).json({ error: "Either 'url' or 'html' is required" });
 
         const browser = await puppeteer.launch({
             headless: true,
@@ -50,8 +50,14 @@ app.post("/generate-pdf", async (req, res) => {
 
 	console.log("📝 Creating new page...");
         const page = await browser.newPage();
-	console.log("🔗 Navigating to:", url);
-        await page.goto(url, { waitUntil: "networkidle2" });
+	
+	if (url) {
+	    console.log("🔗 Navigating to:", url);
+            await page.goto(url, { waitUntil: "networkidle2" });
+	} else if (html) {
+            console.log("📄 Rendering HTML content...");
+            await page.setContent(html, { waitUntil: "networkidle2" });
+	}
 
         console.log("Processing MathJax...");
         await page.evaluate(() => {
