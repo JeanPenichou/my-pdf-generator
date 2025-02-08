@@ -1,18 +1,17 @@
 const { execSync } = require("child_process");
 
-const os = require("os");
-
-if (os.platform() === "linux") {
-    console.log("🔄 Installing Google Chrome for Linux...");
-    const { execSync } = require("child_process");
+// ✅ Manually download and install Google Chrome
+console.log("🔄 Installing Google Chrome...");
+try {
     execSync(
         `apt update && apt install -y wget curl unzip fontconfig locales gconf-service libasound2 libatk1.0-0 libcups2 libdbus-1-3 libgtk-3-0 libnspr4 libxcomposite1 libxrender1 libxss1 libxtst6 libnss3 &&
         wget -q -O /tmp/chrome.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb &&
         apt install -y /tmp/chrome.deb`,
         { stdio: "inherit" }
     );
-} else {
-    console.log("🖥 Skipping Chrome installation (not needed on Windows).");
+    console.log("✅ Google Chrome installed successfully!");
+} catch (error) {
+    console.error("❌ Failed to install Google Chrome:", error);
 }
 
 
