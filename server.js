@@ -85,9 +85,6 @@ app.post("/generate-pdf", async (req, res) => {
         console.log("PDF generated, sending response...");
         res.setHeader("Content-Type", "application/pdf");
         res.setHeader("Content-Disposition", "attachment; filename=exercise.pdf");
-	res.setHeader("Content-Type", "application/json");
-	res.json({ success: true, message: "PDF généré avec succès" });
-
         res.send(pdfBuffer);
     } catch (error) {
         console.error("PDF generation error:", error);
