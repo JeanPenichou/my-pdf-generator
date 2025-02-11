@@ -29,8 +29,8 @@ app.use(express.json());
 app.post("/generate-pdf", async (req, res) => {
     try {
         console.log("Received request to generate PDF...");
-        const { url, html } = req.body;
-        if (!url && !html) return res.status(400).json({ error: "Either 'url' or 'html' is required" });
+        const { url } = req.body;
+        if (!url ) return res.status(400).json({ error: "Either 'url'" });
 
         const browser = await puppeteer.launch({
             headless: true,
@@ -52,13 +52,8 @@ app.post("/generate-pdf", async (req, res) => {
 	console.log("📝 Creating new page...");
         const page = await browser.newPage();
 	
-	if (url) {
-	    console.log("🔗 Navigating to:", url);
-            await page.goto(url, { waitUntil: "networkidle2" });
-	} else if (html) {
-            console.log("📄 Rendering HTML content...");
-            await page.setContent(html, { waitUntil: "networkidle2" });
-	}
+	console.log("🔗 Navigating to:", url);
+        await page.goto(url, { waitUntil: "networkidle2" });
 
         console.log("Processing MathJax...");
 	    await page.evaluate(async () => {
@@ -77,7 +72,7 @@ app.post("/generate-pdf", async (req, res) => {
 
         console.log("Generating PDF...");
         console.log("📄 Generating PDF with top margin...");
-	const pdfBuffer = await page.pdf({ format: "A4", printBackground: true, margin: { top: "50px" } });
+	const pdfBuffer = await page.pdf({ format: "A4", printBackground: true, margin: { top: "50px", bottom : "50px" } });
 
 	console.log("🔒 Closing browser...");
         await browser.close();
